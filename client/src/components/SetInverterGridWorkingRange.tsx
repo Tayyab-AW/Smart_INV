@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { setInverterParameters } from "../services/api";
 
-const SetToDefault = () => {
+const SetInverterGridWorkingRange = () => {
   const [response, setResponse] = useState<string>("");
   const [data, setData] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
@@ -9,7 +9,7 @@ const SetToDefault = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await setInverterParameters("PF", data);
+      const res = await setInverterParameters("PGR", data);
       setResponse(res[0].response);
       console.log(res[0].response);
     } catch (err) {
@@ -18,7 +18,7 @@ const SetToDefault = () => {
   };
 
   return (
-    <div style={{display: "flex" , flexDirection: 'column', marginTop: '50px'}}>
+    <div>
       <form onSubmit={handleSubmit}>
         <button type="submit"> Restore Default</button>
       </form>
@@ -34,4 +34,4 @@ const SetToDefault = () => {
   );
 };
 
-export default SetToDefault;
+export default SetInverterGridWorkingRange;

@@ -1,113 +1,3 @@
-// const express = require('express');
-// const cors = require('cors');
-// const mqtt = require('mqtt');
-// const bodyParser = require('body-parser');
-// const WebSocket = require('ws');
-
-// const app = express();
-// const port = 3000;
-
-// // CORS configuration
-// const whitelist = [
-//   'http://localhost:5173',
-//   'http://localhost:3000',
-//   'http://192.168.0.181:5173',
-//   'http://192.168.0.181:8081',
-//   'https://react.tayyabaw.com',
-//   'https://api-smartinv.tayyabaw.com/'
-// ];
-
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (whitelist.indexOf(origin) !== -1 || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   }
-// };
-
-// app.use(cors(corsOptions));
-// app.use(bodyParser.json());
-
-// // Create a WebSocket server
-// const server = require('http').createServer(app);
-// const wss = new WebSocket.Server({ server });
-
-// // Broadcast to all connected clients
-// wss.broadcast = function broadcast(data) {
-//   wss.clients.forEach(function each(client) {
-//     if (client.readyState === WebSocket.OPEN) {
-//       client.send(data);
-//     }
-//   });
-// };
-
-// // MQTT Client Configuration
-// const mqttClient = mqtt.connect('mqtt://localhost:1883');
-
-// // Subscribe to the topic to receive messages from ESP32
-// mqttClient.on('connect', () => {
-//   console.log('Connected to MQTT broker');
-//   mqttClient.subscribe('inverter/response', (err) => {
-//     if (!err) {
-//       console.log('Subscribed to inverter/response topic');
-//     }
-//   });
-  
-//   mqttClient.subscribe('inverter/command/received', (err) => {
-//     if (!err) {
-//       console.log('Subscribed to inverter/command/received topic');
-//     }
-//   });
-// });
-
-// // Log inverter responses and received commands
-// mqttClient.on('message', (topic, message) => {
-//   if (topic === 'inverter/response') {
-//     console.log('Inverter Response:', message.toString());
-//     // Broadcast the response to all WebSocket clients
-//     wss.broadcast(message.toString());
-//   } else if (topic === 'inverter/command/received') {
-//     console.log('Received Command:', message.toString());
-//   }
-// });
-
-// // Endpoint to send a command to the inverter
-// app.post('/api/send-command', (req, res) => {
-//   const command = req.body.commanda;
-//   console.log(command)
-//   mqttClient.publish('inverter/command', command);
-//   res.send({ response: 'Command sent' });
-// });
-
-// // Endpoint to turn on the LED
-// app.post('/api/led-on', (req, res) => {
-//   mqttClient.publish('inverter/command', 'LED_ON');
-//   res.send({ status: 'LED ON command sent' });
-// });
-
-// // Endpoint to turn off the LED
-// app.post('/api/led-off', (req, res) => {
-//   mqttClient.publish('inverter/command', 'LED_OFF');
-//   res.send({ status: 'LED OFF command sent' });
-// });
-
-// // Endpoint to get the latest data from the inverter
-// app.get('/api/data', (req, res) => {
-//   mqttClient.publish('inverter/command', 'refreshData');
-//   mqttClient.once('message', (topic, message) => {
-//     if (topic === 'inverter/response') {
-//       res.send({ data: message.toString() });
-//     }
-//   });
-// });
-
-// server.listen(port, () => {
-//   console.log(`Server is running on http://localhost:${port}`);
-// });
-
-
 const express = require('express');
 const mqtt = require('mqtt');
 const cors = require('cors');
@@ -168,7 +58,7 @@ client.on('message', (topic, message) => {
     const [command, response] = messageStr.split(';');
     // const cleanedResponse = response.replace(/[^a-zA-Z0-9]/g, '');
     const cleanedResponse = response.replace(/[{()}]/g, '');
-    const parsedResponse = parseInverterResponseGet(command, cleanedResponse);
+    const parsedResponse = parseInverterResponse(command, cleanedResponse);
     inverterData = { command, ...parsedResponse };
     console.log('Parsed Response:', inverterData);
 
@@ -199,7 +89,7 @@ function sendCommandToInverter(command) {
   });
 }
 
-function parseInverterResponseGet(command, response) {
+function parseInverterResponse(command, response) {
     const cleanedResponse = response.replace(/[^a-zA-Z0-9 . :]/g, ' ');
   
   if (command === 'QID') {
@@ -373,9 +263,9 @@ function parseInverterResponseGet(command, response) {
     maxChargingTimeAtCvStage: fields[25],
   };
 } else if (command === 'QMCHGCR') {
-  return { rawResponse: cleanedResponse };
+  return { response: cleanedResponse };
 } else if (command === 'QMUCHGCR') {
-  return { rawResponse: cleanedResponse };
+  return { response: cleanedResponse };
 } else if (command === 'QOPM') {
   const fields = cleanedResponse.split(' ');
   return {
@@ -411,25 +301,19 @@ function parseInverterResponseGet(command, response) {
   return {
     response: fields,
   }}
-    return { rawResponse: response };  // Fallback to return raw response if command is not specifically handled
+    return { response: response };  // Fallback to return raw response if command is not specifically handled
 }
 
-function parseInverterResponsePost(command, {response}) {
-  const cleanedResponse = response.replace(/[^a-zA-Z]/g, ' ');
- if (command === 'PF') {
-const fields = cleanedResponse;
-return {
-  response: fields,
-}}
-  return { rawResponse: response };  // Fallback to return raw response if command is not specifically handled
-}
+
+//Query Parameters
 
 const commandsGet = ['QID', 'QSID', 'QVFW', 'QVFW2', 'QPIRI', 'QFLAG', 'QPIGS', 'QPGSn', 'QMOD', 'QPIWS', 'QDI', 'QMCHGCR', 'QMUCHGCR', 'QOPM', 'QMN', 'QGMN', 'QBEQI'];
 
 commandsGet.forEach(command => {
-  app.get(`/api/${command}`, async (req, res) => {
+  app.get(`/api/inverter/${command}`, async (req, res) => {
   try {
         const data = await sendCommandToInverter(command);
+        console.log("This",data)
         res.json([data]); // Send data as an array
   } catch (error) {
         console.error('Error in command endpoint:', error);
@@ -440,56 +324,48 @@ commandsGet.forEach(command => {
 });
 
 
-app.post('/api/inverter/pf', async (req, res) => {
-  const { command } = req.body;
-  try {
-        const rawData = await sendCommandToInverter(command);
-        const parsedData = parseInverterResponsePost(command, rawData);
-        res.json(parsedData);
-  } catch (error) {
-      console.error('Error in pf endpoint:', error);
-      res.status(500).json({ error: 'Failed to set status on inverter' });
-  }
+//Setting Parameters
+
+const commandsPost = ['PE', 'PF', 'MCHGC', 'MNCHGC', 'MUCHGC', 'F', 'POP', 'PBCV', 'PBDV', 'PCP', 'PGR', 'PBT', 'POPM', 'PPCP', 'PSDV', 'PCVV', 'PBFT', 'PPVOKC', 'PSPB', 'PBEQE', 'PBEQT', 'PBEQP', 'PBEQV', 'PBEQOT', 'PBEQA', 'PCVT'];
+
+commandsPost.forEach(command => {
+  app.post(`/api/inverter/${command}`, async (req, res) => {
+      const { data } = req.body;
+      const command1 = `${command}${data}`;
+    try {
+          const rawData = await sendCommandToInverter(command1);
+          // const parsedData = parseInverterResponsePost(rawData);
+          res.json([rawData]);
+    } catch (error) {
+        console.error(`Error in ${command}  endpoint:`, error);
+        res.status(500).json({ error: 'Failed to change setting on inverter' });
+    }
+  });
 });
 
-app.post('/api/inverter/mchgc', async (req, res) => {
-  const { maxChargingCurrent } = req.body;
-  const command = `MCHGC${maxChargingCurrent}`; // Replace <CRC> with the actual CRC calculation
-  try {
-    const data = await sendCommandToInverter(command);
-    res.json({ command, response: data });
-  } catch (error) {
-    console.error('Error in MCHGC endpoint:', error);
-    res.status(500).json({ error: 'Failed to get response from inverter' });
-  }
-});
+// app.post('/api/inverter/pf', async (req, res) => {
+//   const { command } = req.body;
+//   try {
+//         const rawData = await sendCommandToInverter(command);
+//         const parsedData = parseInverterResponsePost(command, rawData);
+//         res.json(parsedData);
+//   } catch (error) {
+//       console.error('Error in pf endpoint:', error);
+//       res.status(500).json({ error: 'Failed to set status on inverter' });
+//   }
+// });
 
-app.post('/api/inverter/pop', async (req, res) => {
-  const { sourcePriority } = req.body;
-  const command = `POP${sourcePriority}`; // Replace <CRC> with the actual CRC calculation
-  try {
-    const data = await sendCommandToInverter(command);
-    res.json({ command, response: data });
-  } catch (error) {
-    console.error('Error in MCHGC endpoint:', error);
-    res.status(500).json({ error: 'Failed to get response from inverter' });
-  }
-});
-
-
-
-
-app.get('/api/response/:command', (req, res) => {
-    const command = req.params.command;
-    res.json({ response: inverterData[command] || 'No response yet' });
-});
-
-app.post('/api/setBatteryType', (req, res) => {
-    const { batteryType, serialNumber } = req.body;
-    const payload = `PBFT,${batteryType}\r`;
-    client.publish(`inverter/command/${serialNumber}`, payload);
-    res.json({ message: 'Set battery type command sent' });
-});
+// app.post('/api/inverter/mchgc', async (req, res) => {
+//   const { maxChargingCurrent } = req.body;
+//   const command = `MCHGC${maxChargingCurrent}`; // Replace <CRC> with the actual CRC calculation
+//   try {
+//     const data = await sendCommandToInverter(command);
+//     res.json({ command, response: data });
+//   } catch (error) {
+//     console.error('Error in MCHGC endpoint:', error);
+//     res.status(500).json({ error: 'Failed to get response from inverter' });
+//   }
+// });
 
 // Endpoint to turn on the LED
 app.post('/api/led-on', (req, res) => {

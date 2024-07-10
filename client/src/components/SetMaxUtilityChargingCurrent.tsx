@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { setInverterParameters } from "../services/api";
 
-const SetMaxChargingCurrent = () => {
+const SetMaxUtilityChargingCurrent = () => {
   const [response, setResponse] = useState<string>("");
   const [amps, setAmps] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +32,7 @@ const SetMaxChargingCurrent = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await setInverterParameters("MNCHGC", amps);
+      const res = await setInverterParameters("MUCHGC", amps);
       setResponse(res[0].response);
       console.log(res[0].response);
     } catch (err) {
@@ -41,8 +41,10 @@ const SetMaxChargingCurrent = () => {
   };
 
   return (
-    <div style={{display: "flex" , flexDirection: 'column', marginTop: '50px'}}>
-      <span style={{ fontSize: "24px"}}>Max Charging Current:</span>
+    <div
+      style={{ display: "flex", flexDirection: "column", marginTop: "50px" }}
+    >
+      <span style={{ fontSize: "24px" }}>Max Utility Charging Current:</span>
       <form onSubmit={handleSubmit}>
         <select onChange={handleCommandChange} value={amps}>
           {listOptions}
@@ -60,5 +62,4 @@ const SetMaxChargingCurrent = () => {
     </div>
   );
 };
-
-export default SetMaxChargingCurrent;
+export default SetMaxUtilityChargingCurrent;
