@@ -91,6 +91,7 @@ function sendCommandToInverter(command) {
 
 function parseInverterResponse(command, response) {
     const cleanedResponse = response.replace(/[^a-zA-Z0-9 . :]/g, ' ');
+    const postResponse = cleanedResponse.replace(/[^a-zA-Z]/g, '');
   
   if (command === 'QID') {
     const fields = cleanedResponse.split(' ');
@@ -301,7 +302,7 @@ function parseInverterResponse(command, response) {
   return {
     response: fields,
   }}
-    return { response: response };  // Fallback to return raw response if command is not specifically handled
+    return { response: postResponse };  // Fallback to return raw response if command is not specifically handled
 }
 
 
