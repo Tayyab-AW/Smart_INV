@@ -41,8 +41,8 @@ const SetMaxChargingCurrent = () => {
   };
 
   return (
-    <div style={{display: "flex" , flexDirection: 'column', marginTop: '50px'}}>
-      <span style={{ fontSize: "24px"}}>Max Charging Current:</span>
+    <div className="bg-[grey] flex flex-col mt-[50px] w-screen h-auto p-[20px] rounded-md">
+      <span style={{ fontSize: "24px" }}>Max Charging Current:</span>
       <form onSubmit={handleSubmit}>
         <select onChange={handleCommandChange} value={amps}>
           {listOptions}

@@ -1,5 +1,5 @@
 // src/components/InverterData.tsx
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { queryInverterParameters } from "../services/api";
 
 const InverterData: React.FC = () => {
@@ -54,9 +54,7 @@ const InverterData: React.FC = () => {
   }
 
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", marginTop: "50px" }}
-    >
+    <div className="bg-[grey] flex flex-col mt-[50px] w-screen h-auto p-[20px] rounded-md">
       <form onSubmit={handleSubmit}>
         <select onChange={handleCommandChange} value={command}>
           {listOptions}
@@ -68,10 +66,7 @@ const InverterData: React.FC = () => {
         {response.length > 0 &&
           Object.keys(response[0]).map((key) => (
             <div key={key} className="flex mb-[10px] gap-6">
-              <strong
-
-                className="block box-border h-auto w-[300px] break-words"
-              >
+              <strong className="block box-border h-auto w-[300px] break-words">
                 {key}:
               </strong>
               <span>{response[0][key]}</span>

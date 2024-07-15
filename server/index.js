@@ -150,22 +150,30 @@ function parseInverterResponse(command, response) {
       pvPowerBalance: fields[24],
       maxChargingTimeAtCvStage: fields[25],
     };
-} else if (command === 'QFLAG') {
-    // Assume QFLAG response is a string of characters
-    const flags = cleanedResponse.split('');
-    return {
-      enableDisableSilenceBuzzerOrOpenBuzzer: flags[0],
-      enableDisableOverloadBypassFunction: flags[1],
-      enableDisablePowerSaving: flags[2],
-      enableDisableLcdDisplayEscapeToDefaultPageAfter1MinTimeout: flags[3],
-      enableDisableOverLoadRestart: flags[4],
-      enableDisableOverTemperatureRestart: flags[5],
-      enableDisableBackLightOn: flags[6],
-      enableDisableAlarmOnWhenPrimarySourceinterrupt : flags[7],
-      enableDisableFaultCodeRecord: flags[8],
-        // add other fields based on the response format
-    };
-} else if (command === 'QPIGS') {
+} 
+else if (command === 'QFLAG') {
+  const enabledFlags = [];
+  const disabledFlags = [];
+  let currentCategory = 'E';
+
+  for (const char of cleanedResponse) {
+      if (char === 'E' || char === 'D') {
+          currentCategory = char;
+      } else {
+          if (currentCategory === 'E') {
+              enabledFlags.push(char);
+          } else if (currentCategory === 'D') {
+              disabledFlags.push(char);
+          }
+      }
+  }
+
+  return {
+      enabledFlags,
+      disabledFlags
+  }
+    }
+else if (command === 'QPIGS') {
   const fields = cleanedResponse.split(' ');
   return {
     gridVoltage: fields[0],
@@ -327,7 +335,7 @@ commandsGet.forEach(command => {
 
 //Setting Parameters
 
-const commandsPost = ['PE', 'PF', 'MCHGC', 'MNCHGC', 'MUCHGC', 'F', 'POP', 'PBCV', 'PBDV', 'PCP', 'PGR', 'PBT', 'POPM', 'PPCP', 'PSDV', 'PCVV', 'PBFT', 'PPVOKC', 'PSPB', 'PBEQE', 'PBEQT', 'PBEQP', 'PBEQV', 'PBEQOT', 'PBEQA', 'PCVT'];
+const commandsPost = ['PE', "BSDV", 'PD', 'PF', 'MCHGC', 'MNCHGC', 'MUCHGC', 'F', 'POP', 'PBCV', 'PBDV', 'PCP', 'PGR', 'PBT', 'POPM', 'PPCP', 'PSDV', 'PCVV', 'PBFT', 'PPVOKC', 'PSPB', 'PBEQE', 'PBEQT', 'PBEQP', 'PBEQV', 'PBEQOT', 'PBEQA', 'PCVT'];
 
 commandsPost.forEach(command => {
   app.post(`/api/inverter/${command}`, async (req, res) => {

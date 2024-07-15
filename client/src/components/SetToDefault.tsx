@@ -18,7 +18,7 @@ const SetToDefault = () => {
   };
 
   return (
-    <div style={{display: "flex" , flexDirection: 'column', marginTop: '50px'}}>
+    <div className="bg-[grey] flex flex-col mt-[50px] w-screen h-auto p-[20px] rounded-md">
       <form onSubmit={handleSubmit}>
         <button type="submit"> Restore Default</button>
       </form>
