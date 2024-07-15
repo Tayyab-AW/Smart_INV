@@ -26,7 +26,7 @@ const SetBatteryCutOffVoltage = () => {
   ];
   const TwentyFourVolt = [
     "Select Voltage",
-    "21.00V",
+    "21.0V",
     "21.5V",
     "22.0V",
     "22.5V",

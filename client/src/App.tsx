@@ -4,7 +4,7 @@ import InverterData from "./components/InverterData";
 import SetToDefault from "./components/SetToDefault";
 import SetMaxChargingCurrent from "./components/SetMaxChargingCurrent";
 import SetMaxUtilityChargingCurrent from "./components/SetMaxUtilityChargingCurrent";
-import SetStatusFlag from "./components/SetStatusFlag";
+// import SetStatusFlag from "./components/SetStatusFlag";
 import SetOuputFrequency from "./components/SetOuputFrequency";
 import SetOuputSourcePriority from "./components/SetOuputSourcePriority";
 import SetBatteryReChargeVoltage from "./components/SetBatteryReChargeVoltage";

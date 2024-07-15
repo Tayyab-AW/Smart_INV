@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { queryInverterParameters } from "../services/api";
 
 const InverterData: React.FC = () => {
-  const [response, setResponse] = useState<string>("");
+  const [response, setResponse] = useState<any>("");
   const [error, setError] = useState<string | null>(null);
   const [command, setCommand] = useState<string>("");
 

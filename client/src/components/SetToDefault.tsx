@@ -3,13 +3,12 @@ import { setInverterParameters } from "../services/api";
 
 const SetToDefault = () => {
   const [response, setResponse] = useState<string>("");
-  const [data, setData] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await setInverterParameters("PF", data);
+      const res = await setInverterParameters("PF", '');
       setResponse(res[0].response);
       console.log(res[0].response);
     } catch (err) {

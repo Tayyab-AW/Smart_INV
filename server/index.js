@@ -322,7 +322,6 @@ commandsGet.forEach(command => {
   app.get(`/api/inverter/${command}`, async (req, res) => {
   try {
         const data = await sendCommandToInverter(command);
-        console.log("This",data)
         res.json([data]); // Send data as an array
   } catch (error) {
         console.error('Error in command endpoint:', error);
@@ -351,30 +350,6 @@ commandsPost.forEach(command => {
     }
   });
 });
-
-// app.post('/api/inverter/pf', async (req, res) => {
-//   const { command } = req.body;
-//   try {
-//         const rawData = await sendCommandToInverter(command);
-//         const parsedData = parseInverterResponsePost(command, rawData);
-//         res.json(parsedData);
-//   } catch (error) {
-//       console.error('Error in pf endpoint:', error);
-//       res.status(500).json({ error: 'Failed to set status on inverter' });
-//   }
-// });
-
-// app.post('/api/inverter/mchgc', async (req, res) => {
-//   const { maxChargingCurrent } = req.body;
-//   const command = `MCHGC${maxChargingCurrent}`; // Replace <CRC> with the actual CRC calculation
-//   try {
-//     const data = await sendCommandToInverter(command);
-//     res.json({ command, response: data });
-//   } catch (error) {
-//     console.error('Error in MCHGC endpoint:', error);
-//     res.status(500).json({ error: 'Failed to get response from inverter' });
-//   }
-// });
 
 // Endpoint to turn on the LED
 app.post('/api/led-on', (req, res) => {
