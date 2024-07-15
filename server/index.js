@@ -12,7 +12,8 @@ const whitelist = [
   'http://192.168.0.181:5173',
   'http://192.168.0.181:8081',
   'https://react.tayyabaw.com',
-  'https://api-smartinv.tayyabaw.com/'
+  'https://api-smartinv.tayyabaw.com/',
+  'https://smartinv.tayyabaw.com/'
 ];
 
 const corsOptions = {
