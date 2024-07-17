@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL, // Change this to your Node.js server URL
+  baseURL: import.meta.env.VITE_SERVER_URL1, // Change this to your Node.js server URL
 });
 
 export const toggleLED = async (action: "on" | "off") => {
