@@ -14,6 +14,7 @@ import SetInverterGridWorkingRange from "./components/SetInverterGridWorkingRang
 import SetBatteryType from "./components/SetBatteryType";
 import SetBatteryCutOffVoltage from "./components/SetBatteryCutOffVoltage";
 import SetBatteryFloatChargingVoltage from "./components/SetBatteryFloatChargingVoltage";
+import DeviceStatus from "./components/DeviceStatus";
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,9 @@ const App: React.FC = () => {
         <InverterData />
       </div>
       <div>
+        <DeviceStatus />
+      </div>
+      {/* <div>
         <SetMaxChargingCurrent />
       </div>
       <div>
@@ -56,7 +60,7 @@ const App: React.FC = () => {
       </div>
       <div>
         <SetBatteryFloatChargingVoltage />
-      </div>
+      </div> */}
       {/* <div><SetStatusFlag /></div> */}
     </div>
   );

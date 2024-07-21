@@ -26,3 +26,11 @@ export const setInverterParameters = async (command: string, data: string) => {
   });
   return response.data;
 };
+
+
+//Get Devices Endpoint
+
+export const getAllDevices = async () => {
+  const response = await api.get(`api/devices/`);
+  return response.data;
+};
