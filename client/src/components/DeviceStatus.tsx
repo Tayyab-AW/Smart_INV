@@ -1,9 +1,15 @@
 // src/DeviceStatus.js
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAllDevices } from "../services/api";
 
+// Define a type for the device
+interface Device {
+  serialNumber: string;
+  online: boolean;
+}
+
 const DeviceStatus = () => {
-  const [devices, setDevices] = useState([]);
+  const [devices, setDevices] = useState<Device[]>([]);
 
   useEffect(() => {
     const fetchDevices = async () => {

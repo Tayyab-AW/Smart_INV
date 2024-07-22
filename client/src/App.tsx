@@ -25,7 +25,7 @@ const App: React.FC = () => {
       <div>
         <DeviceStatus />
       </div>
-      {/* <div>
+      <div>
         <SetMaxChargingCurrent />
       </div>
       <div>
@@ -60,7 +60,7 @@ const App: React.FC = () => {
       </div>
       <div>
         <SetBatteryFloatChargingVoltage />
-      </div> */}
+      </div>
       {/* <div><SetStatusFlag /></div> */}
     </div>
   );
