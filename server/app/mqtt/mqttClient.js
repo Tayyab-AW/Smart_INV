@@ -3,7 +3,7 @@ const parseInverterResponse = require('../utils/parseInverterResponse');
 const { v4: uuidv4 } = require('uuid');
 const Device = require("../models/deviceModel");
 
-const client = mqtt.connect('ws://localhost:9001');
+const client = mqtt.connect('mqtt://192.168.0.181:1883');
 
 let commandResponseResolver;
 
@@ -50,7 +50,7 @@ client.on('message', async (topic, message) => {
         commandResponseResolver = null;
       }
     }
-  }else if (topic === 'inverter/keepalive/12345') {
+  }else if (topic === 'inverter/keepalive/Q0023042086904') {
     console.log(messageStr)
     try {
       const serialNumber = messageStr;
